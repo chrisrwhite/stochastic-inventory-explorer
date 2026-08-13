@@ -1,0 +1,63 @@
+[project]
+name = "stochastic-inventory-reorder"
+version = "0.1.0"
+description = "Stochastic Inventory Reorder / Safety Stock Explorer"
+requires-python = ">=3.12,<4.0"
+readme = "../README.md"
+license = "MIT"
+authors = [{ name = "Stochastic Inventory Reorder contributors" }]
+dependencies = [
+    "fastapi (>=0.115.0,<1.0.0)",
+    "uvicorn[standard] (>=0.30.0,<1.0.0)",
+    "pydantic (>=2.8.0,<3.0.0)",
+    "numpy (>=2.1.0,<3.0.0)",
+    "scipy (>=1.14.0,<2.0.0)",
+    "pandas (>=2.2.0,<3.0.0)",
+    "pyyaml (>=6.0.2,<7.0.0)",
+]
+
+[tool.poetry]
+packages = [{ include = "app" }]
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.0"
+pytest-cov = "^5.0.0"
+httpx = "^0.27.0"
+ruff = "^0.6.0"
+mypy = "^1.11.0"
+
+[tool.poetry.group.notebook.dependencies]
+matplotlib = "^3.8.0"
+jupyter = "^1.0.0"
+ipykernel = "^6.29.0"
+nbformat = "^5.10.0"
+jinja2 = "^3.1.0"
+
+[tool.poetry.group.data]
+optional = true
+
+[tool.poetry.group.data.dependencies]
+openpyxl = "^3.1.0"
+kaggle = "^1.8.3"
+py7zr = "^1.1.3"
+
+[build-system]
+requires = ["poetry-core>=2.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP", "B", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+ignore_missing_imports = true

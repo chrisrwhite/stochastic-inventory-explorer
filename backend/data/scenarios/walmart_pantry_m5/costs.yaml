@@ -1,0 +1,7 @@
+unit_cost: 0.54
+holding_cost_per_unit_per_day: 0.0004
+stockout_cost_per_unit: 0.98
+fixed_order_cost: 30.0
+variable_order_cost_per_unit: 0.04
+starting_inventory: 81.0
+review_period_days: 1

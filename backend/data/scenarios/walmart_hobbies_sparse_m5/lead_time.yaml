@@ -1,0 +1,6 @@
+distribution: triangular
+min_days: 3
+mode_days: 7
+max_days: 14
+mean_days: 7.7
+std_days: 2.2

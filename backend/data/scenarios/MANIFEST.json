@@ -1,0 +1,79 @@
+{
+  "scenarios": [
+    {
+      "scenario_id": "walmart_pantry_m5",
+      "title": "Walmart \u00b7 pantry SKU (steady, ~12/day)",
+      "description": "Steady mid-volume pantry item at Walmart Los Angeles (item FOODS_1_218, store CA_3, roughly 12 units/day, about 5% zero-days). A good default; there's enough volume for clean statistics, and it's small enough that the reorder policy actually matters.",
+      "domain": "retail_chain",
+      "sku_id": "M5-FOODS_1_218-CA_3",
+      "source": "m5_walmart",
+      "downloaded_at": "2026-07-27",
+      "history_days": 1941,
+      "start_date": "2011-01-29",
+      "files": {
+        "demand": {
+          "path": "walmart_pantry_m5/demand.csv",
+          "sha256": "39513bc9369b9d24badf0a95bc475bd17dc0b78ec3202e7bca10c1339648003e"
+        },
+        "costs": {
+          "path": "walmart_pantry_m5/costs.yaml",
+          "sha256": "e0deb63be442db3af889bf9c7647161e737246f2693026aef31fc9c0e46e9a3d"
+        },
+        "lead_time": {
+          "path": "walmart_pantry_m5/lead_time.yaml",
+          "sha256": "093addcbe8c8d57d32a16b51a1a1d47be04f231be8936edac03740f6f06da4be"
+        }
+      }
+    },
+    {
+      "scenario_id": "walmart_hobbies_sparse_m5",
+      "title": "Walmart \u00b7 hobbies (very sparse)",
+      "description": "Very sparse demand at Walmart LA (item HOBBIES_2_017, store CA_3). Roughly 85% zero-days, around 0.2 units/day on average. A good real-world test for intermittent demand, where cycle service level and fill rate can diverge sharply.",
+      "domain": "retail_chain",
+      "sku_id": "M5-HOBBIES_2_017-CA_3",
+      "source": "m5_walmart",
+      "downloaded_at": "2026-07-27",
+      "history_days": 1941,
+      "start_date": "2011-01-29",
+      "files": {
+        "demand": {
+          "path": "walmart_hobbies_sparse_m5/demand.csv",
+          "sha256": "de3cf1583e5035e72ffa829ef711df42f21558fcbc3e2072e37de210021c22b7"
+        },
+        "costs": {
+          "path": "walmart_hobbies_sparse_m5/costs.yaml",
+          "sha256": "8b85445e17177d8afa61e42de35f542a79521b435a6dcc1056d2d22471f6d06f"
+        },
+        "lead_time": {
+          "path": "walmart_hobbies_sparse_m5/lead_time.yaml",
+          "sha256": "164f8a18309713b79713c6a067a28560d7616a8480cbafc46b42dbf4bb007406"
+        }
+      }
+    },
+    {
+      "scenario_id": "retail_online_uk",
+      "title": "UK e-commerce \u00b7 gift item (heavy-tailed)",
+      "description": "UK gift-shop item (StockCode 85123A, white hanging heart t-light holder) from UCI Online Retail II, 2009 through 2011. Heavy-tailed demand: the median is around 88 units/day, but the occasional 4,000-unit spike shows up. Cycle service level plateaus around 93 to 94% (95% isn't reachable), while fill rate stays near 100%. It's a good example of why fill rate often matters more than CSL on real retail data.",
+      "domain": "ecommerce",
+      "sku_id": "UCI-85123A",
+      "source": "uci_online_retail_ii",
+      "downloaded_at": "2026-07-27",
+      "history_days": 739,
+      "start_date": "2009-12-01",
+      "files": {
+        "demand": {
+          "path": "retail_online_uk/demand.csv",
+          "sha256": "71ac9911ec01cdce992021d91478c0ad89b01589dd877356aa9b6294804f48a4"
+        },
+        "costs": {
+          "path": "retail_online_uk/costs.yaml",
+          "sha256": "49acbf8d8942bb64faa704bf18d7e22389a1a525a7f59cbdba5da7f859fc7037"
+        },
+        "lead_time": {
+          "path": "retail_online_uk/lead_time.yaml",
+          "sha256": "2fb006f8e25599ebdbfb33cbc8e818e1cb3e4c7c5357aeca8a2c96ffbbfcbf20"
+        }
+      }
+    }
+  ]
+}

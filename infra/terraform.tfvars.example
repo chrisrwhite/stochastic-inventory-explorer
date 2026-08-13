@@ -1,0 +1,20 @@
+# Copy to terraform.tfvars and edit. terraform.tfvars is gitignored; THIS file
+# is committed, so keep real project identifiers out of it.
+
+# The GCP project created in step 1 of docs/deploy.md.
+project_id = "your-project-id"
+
+# The repo allowed to deploy, as owner/name. Casing is irrelevant -- the WIF
+# provider folds case on both sides.
+github_repo = "your-gh-user/stochastic-inventory-explorer"
+
+# Custom domain to map. Empty skips the mapping and the service stays on its
+# *.run.app URL. Requires the domain verified for your account and a DNS-only
+# (grey cloud) CNAME to ghs.googlehosted.com -- see docs/deploy.md step 5.
+custom_domain = ""
+
+# Optional overrides -- the defaults in variables.tf are sized from measured
+# solver runtimes and are a reasonable starting point.
+# region        = "us-east1"
+# service_name  = "stochastic-inventory-reorder"
+# min_instances = 1   # pay ~$5-10/mo to remove the cold start

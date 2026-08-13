@@ -1,0 +1,5 @@
+distribution: lognormal
+mean_days: 7.0
+std_days: 2.0
+min_days: 3
+max_days: 21

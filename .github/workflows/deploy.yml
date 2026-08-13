@@ -1,0 +1,77 @@
+name: Deploy to Cloud Run
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+env:
+  SERVICE: stochastic-inventory-reorder
+  REGION: us-east1
+  REPO: stochastic-inventory-reorder
+
+jobs:
+  build-and-deploy:
+    name: Build image and roll out
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_DEPLOY_SERVICE_ACCOUNT }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker "${{ env.REGION }}-docker.pkg.dev" --quiet
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPO }}/app:${{ github.sha }}
+            ${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPO }}/app:latest
+
+      # Image only. Every other setting on this service -- CPU, memory,
+      # concurrency, scaling, timeout, and the MAX_* compute-envelope env
+      # vars -- is owned by Terraform in infra/, and `gcloud run deploy
+      # --image` leaves settings it is not passed untouched.
+      #
+      # Do not add sizing flags here. They would silently override Terraform
+      # on every push and the drift would not show up in `terraform plan`.
+      # Change infra/variables.tf and `terraform apply` instead.
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy "${{ env.SERVICE }}" \
+            --image "${{ env.REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/${{ env.REPO }}/app:${{ github.sha }}" \
+            --region "${{ env.REGION }}"
+
+      - name: Smoke-test the new revision
+        run: |
+          URL=$(gcloud run services describe "${{ env.SERVICE }}" \
+            --region "${{ env.REGION }}" \
+            --format='value(status.url)')
+          echo "Deployed: $URL"
+          echo "### Deployed to [$URL]($URL)" >> "$GITHUB_STEP_SUMMARY"
+          # /api/health reports scenario count, so a green check here means the
+          # bundled scenario data made it into the image too -- not just that
+          # the process is listening.
+          curl --fail --silent --show-error --retry 5 --retry-all-errors \
+            --retry-delay 5 --max-time 30 "$URL/api/health" | tee /dev/stderr
